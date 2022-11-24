@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
-#include "tlv.h"
+#include <tlv.h>
 
 
 
@@ -20,20 +20,42 @@ void tlvInfo_init(tlvInfo_t *tlv){
 	tlv->Description =NULL;
 }
 
-tlv_t * tlv_parse(unsigned char *arr, int * index){
+tlv_t * tlv_parse(unsigned char *arr, int * index, tlv_t* tlv){
 	/*function to parse one tag,len,value */
 	int j;
-	tlv_t * tlv;
-	if(NULL == (tlv = malloc(sizeof(tlv_t)))){
+	//tlv_t * tlv;
+	/*if(NULL == (tlv = malloc(sizeof(tlv_t)))){
 		printf("%s\n", "malloc failed \n");
-	}
+	}*/
 
 	//printf("\n");
-	if(arr[*index]==0x9F || arr[*index]==0x5F || arr[*index]==0xBF)
+	/*if(arr[*index]==0x9F || arr[*index]==0x5F || arr[*index]==0xBF)
 	{
-		tlv->Tag = arr[*index]<<8 | arr[*index+1];
+		tlv->Tag = arr[*index] << 8 | arr[*index+1];
 		*index += 1;*index += 1;
-	}else
+	}
+	else
+	{
+		tlv->Tag = arr[*index];
+		*index += 1;
+	}*/
+
+	if ((arr[*index] & 0x1F) == 0x1F)
+	{
+		tlv->Tag = (arr[*index] << 8) | arr[*index + 1];
+		//*index += 1; *index += 1;
+		if ((tlv->Tag & 0x80) != 0)
+		{
+			tlv->Tag = (tlv->Tag << 8) | arr[*index + 2];
+			*index += 3;
+		}
+		else
+		{
+			//tlv->Tag = arr[*index];
+			*index += 2;
+		}
+	}
+	else
 	{
 		tlv->Tag = arr[*index];
 		*index += 1;

@@ -4,7 +4,7 @@
 #define SIZE 200
 
 typedef struct{
-	unsigned short Tag;
+	unsigned int Tag;
 	unsigned short Len;
 	unsigned char Val[SIZE];
 }tlv_t;
@@ -20,6 +20,6 @@ typedef struct{
 
 void tlv_init(tlv_t *tlv);
 void tlvInfo_init(tlvInfo_t * tlv);
-tlv_t * tlv_parse(unsigned char arr[], int * index);
+tlv_t * tlv_parse(unsigned char* arr, int * index, tlv_t* tlv);
 
 #endif
