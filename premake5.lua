@@ -5,12 +5,10 @@ workspace "EmvTagParserLib"
 project "EmvTagParserLib"
    kind "StaticLib"
    language "C"
-   targetdir "bin/%{cfg.buildcfg}"
+   targetdir "bin"
    objdir "obj"
    targetname("tlvparser")
-
-   --removefiles{"thirdparty/EMV-tag-parser/main.c"}
-
+   
    includedirs {
 		  "include"
    }
@@ -24,10 +22,12 @@ project "EmvTagParserLib"
   filter "configurations:Debug"
     defines { "DEBUG", "_DEBUG" }
     symbols "On"
+	targetsuffix "-%{cfg.architecture}-d"
 
   filter "configurations:Release"
     defines { "NDEBUG" }
     optimize "On"
+	targetsuffix "-%{cfg.architecture}"
 
   filter "platforms:Win32"
     defines{"WIN32"}
@@ -46,16 +46,11 @@ project "EmvTagParserLib"
 project "EmvParserTests"
    kind "ConsoleApp"
    language "C"
-   targetdir "bin/%{cfg.buildcfg}"
+   targetdir "bin"
    objdir "obj"
 
    includedirs {
 		"include"
-   }
-
-   links{
-		"tlvparser",
-		"EmvTagParserLib"
    }
 
    files ({
@@ -63,21 +58,29 @@ project "EmvParserTests"
 		"tests/**.c*",
 		"*.lua"
 	})
+	
+	libdirs{
+		"bin"
+	}
 
   filter "configurations:Debug"
     defines { "DEBUG", "_DEBUG" }
     symbols "On"
-
-	libdirs{
-		"bin/Debug"
+	targetsuffix "%{cfg.architecture}d"
+	
+	links{
+		"tlvparser-%{cfg.architecture}-d",
+		"EmvTagParserLib"
 	}
 
   filter "configurations:Release"
     defines { "NDEBUG" }
     optimize "On"
-
-	libdirs{
-		"bin/Release"
+	targetsuffix "%{cfg.architecture}"
+	
+	links{
+		"tlvparser-%{cfg.architecture}",
+		"EmvTagParserLib"
 	}
 
   filter "platforms:Win32"
@@ -93,6 +96,3 @@ project "EmvParserTests"
   filter "platforms:Linux"
     defines{"LINUX"}
     system "linux"
-
-	--buildoptions{"`wx-config --cxxflags`"}
-	--linkoptions{"`wx-config --libs`"}
