@@ -48,6 +48,10 @@ tlvInfo_t emvParse(unsigned char arr[], unsigned short size, tlvInfo_t* t, int* 
 		//Tag desconocido, no lo guardamos ximplemente por no actualizar *tindex
 		printf("Tag desconocido: %X\n", t[*tindex].tlv.Tag);
 		t[*tindex].Description = NULL;
+		t[*tindex].PC = PRIMITIVE;
+		t[*tindex].Template = 0;
+		t[*tindex].Source = ISSUER;
+		t[*tindex].RangeLen = NULL;
 	}
 	//else
 	*tindex += 1;
