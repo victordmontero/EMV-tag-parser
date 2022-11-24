@@ -15,3 +15,8 @@ This is an EMV parser that when you give it a string with EMV data it will show 
 				02-len
 				656E-value
 
+- To Build:
+1. Download [Premake5](https://premake.github.io)
+1. Run `premake5.exe`
+	- Run `premake5.exe vs2019` to generate Visual Studio 2019 solution
+	- Run `premake5.exe gmake2` to generate Unix Makefiles
