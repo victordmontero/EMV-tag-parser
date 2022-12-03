@@ -44,10 +44,15 @@ int emvInfo_get(tlvInfo_t* t, int* tindex, dict_t* hashtab[HASHSIZE]) {
 tlvInfo_t emvParse(unsigned char arr[], unsigned short size, tlvInfo_t* t, int* tindex, int index, dict_t* hashtab[HASHSIZE]) {
 
 	tlv_parse(arr, &index, &t[*tindex].tlv);
+
 	if (1 == emvInfo_get(t, tindex, hashtab)) {
 		//Tag desconocido, no lo guardamos ximplemente por no actualizar *tindex
 		printf("Tag desconocido: %X\n", t[*tindex].tlv.Tag);
 		t[*tindex].Description = NULL;
+		t[*tindex].PC = PRIMITIVE;
+		t[*tindex].Template = 0;
+		t[*tindex].Source = ISSUER;
+		t[*tindex].RangeLen = NULL;
 	}
 	//else
 	*tindex += 1;
