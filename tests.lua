@@ -3,6 +3,8 @@ project "EmvParserTests"
    language "C"
    targetdir "bin"
    objdir "obj"
+   
+   dependson {"EmvTagParserLib"}
 
    includedirs {
 		"include"
@@ -24,8 +26,7 @@ project "EmvParserTests"
 	targetsuffix "%{cfg.architecture}d"
 	
 	links{
-		"tlvparser-%{cfg.architecture}-d",
-		"EmvTagParserLib"
+		"tlvparser-%{cfg.architecture}-d"
 	}
 
   filter "configurations:Release"
@@ -34,8 +35,7 @@ project "EmvParserTests"
 	targetsuffix "%{cfg.architecture}"
 	
 	links{
-		"tlvparser-%{cfg.architecture}",
-		"EmvTagParserLib"
+		"tlvparser-%{cfg.architecture}"
 	}
 
   filter "platforms:Win32"
