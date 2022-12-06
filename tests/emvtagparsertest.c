@@ -30,20 +30,11 @@ cuyo significado es el siguiente:
 */
 int main(){
 	dict_t *dict[HASHSIZE];
-	memset(dict, 0, sizeof(dict));
-	emvInit(dict);
-
-	addItem(0x9F6E, emvInfo_set(PRIMITIVE, TERMINAL, 0x00, "4", "Enhanced Contactless Reader Capabilities"), dict);
-
+	tlvInfo_t *t;
 	tlvInfo_t t2;
 	int idx = 0;
-	memset(&t2, 0, sizeof(tlvInfo_t));
-	t2.tlv.Tag = 0x9F6E;
-
-	emvInfo_get(&t2, &idx, dict);
-	printf("%X:[%s] %s", t2.tlv.Tag, t2.RangeLen, t2.Description);
-
-	displayTable(dict);
+	int tindex = 0;
+	unsigned short size;
 
 	unsigned char test[] = {0x9F,0x26,0x08,0x5D,0x1D,0xDC,0xAF,
 							0xF7,0x44,0xB2,0x48,0x9F,0x10,0x07,
@@ -66,14 +57,30 @@ int main(){
 							0x34,0x30,0x36,0x31,0x9F,0x41,0x00,
 							0xDF,0x81,0x25,0x06,0xCA,0xFE,0xBA,0xBE,0xFF,0xFF};
 
+	memset(dict, 0, sizeof(dict));
+	emvInit(dict);
+
+	addItem(0x9F6E, emvInfo_set(PRIMITIVE, TERMINAL, 0x00, "4", "Enhanced Contactless Reader Capabilities"), dict);
+
+	
+	memset(&t2, 0, sizeof(tlvInfo_t));
+	t2.tlv.Tag = 0x9F6E;
+
+	emvInfo_get(&t2, &idx, dict);
+	printf("%X:[%s] %s", t2.tlv.Tag, t2.RangeLen, t2.Description);
+
+	displayTable(dict);
+
+	
+
 	//unsigned char test[] = { 0x9F,0x41,0x00,0xDF,0x81,0x25,0x06,0xCA,0xFE,0xBA,0xBE,0xFF,0xFF };
 
 	//unsigned char test[] = {0x9F, 0x35, 0x00}; //consulta de tag
-	unsigned short size = sizeof(test)/sizeof(test[0]);
-	tlvInfo_t *t = malloc(sizeof(tlvInfo_t)*size);
+	size = sizeof(test)/sizeof(test[0]);
+	t = (tlvInfo_t*)malloc(sizeof(tlvInfo_t)*size);
 	memset(t, NULL, size);
 	tlvInfo_init(t);
-	int tindex = 0;
+	
 	emvParse(test, size, t, &tindex , 0, dict);
 	emvPrint_result(t, tindex);
 	free(t);

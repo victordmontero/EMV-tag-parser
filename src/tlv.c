@@ -3,8 +3,6 @@
 #include <stdlib.h>
 #include <tlv.h>
 
-
-
 void tlv_init(tlv_t *tlv){
 	memset(&tlv->Tag, 0,sizeof(tlv->Tag));
 	memset(&tlv->Len, 0,sizeof(tlv->Len));

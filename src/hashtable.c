@@ -1,7 +1,7 @@
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include "hashtable.h"
+#include <hashtable.h>
 
 unsigned hash(unsigned char *s)
 {
@@ -16,7 +16,7 @@ dict_t *lookup(unsigned short *s, dict_t *hashtab[HASHSIZE])
 {
     dict_t *np;
     unsigned char str[15];
-    sprintf(str,"%d",*s);
+    sprintf((char*)str,"%d",*s);
     for (np = hashtab[hash(str)]; np != NULL; np = np->next)
         if (*s == np->key)
             return np; /* found */
@@ -27,8 +27,8 @@ dict_t *addItem(unsigned short key, tlvInfo_t *value, dict_t *hashtab[HASHSIZE])
 {
     dict_t *np;
     unsigned char str[15];
-    sprintf(str,"%d",key);
     unsigned hashval;
+	sprintf((char*)str,"%d",key);
     if ((np = lookup(&key, hashtab)) == NULL) { // not found
         np = (dict_t *) malloc(sizeof(*np));
         if (np == NULL)

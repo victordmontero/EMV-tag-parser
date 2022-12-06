@@ -1,5 +1,5 @@
-#include "emvTagList.h"
-#include "hashtable.h"
+#include <emvTagList.h>
+#include <hashtable.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include<string.h>
@@ -7,7 +7,7 @@
 tlvInfo_t* emvInfo_set(unsigned char PC, unsigned char Source,
 	unsigned short Template, unsigned char* RangeLen, unsigned char* Description) {
 
-	tlvInfo_t* t = malloc(sizeof(tlvInfo_t));
+	tlvInfo_t* t = (tlvInfo_t*)malloc(sizeof(tlvInfo_t));
 	tlvInfo_init(t);
 	t->PC = PC;
 	t->Source = Source;
@@ -44,6 +44,10 @@ int emvInfo_get(tlvInfo_t* t, int* tindex, dict_t* hashtab[HASHSIZE]) {
 tlvInfo_t emvParse(unsigned char arr[], unsigned short size, tlvInfo_t* t, int* tindex, int index, dict_t* hashtab[HASHSIZE]) {
 
 	tlv_parse(arr, &index, &t[*tindex].tlv);
+
+	if (t[*tindex].tlv.Tag == 0x00) {
+		return *t;
+	}
 
 	if (1 == emvInfo_get(t, tindex, hashtab)) {
 		//Tag desconocido, no lo guardamos ximplemente por no actualizar *tindex
@@ -120,8 +124,8 @@ void emvPrint_resultString(tlvInfo_t* t, int tindex, char* output) {
 	strcat(output, "\n");
 
 	for (i = 0; i < tindex; i++) {
-		if (trackLen >= composedLen) tabs <= 0 ? tabs = 0 : tabs--;
 		char temp[512] = { 0 };
+		if (trackLen >= composedLen) tabs <= 0 ? tabs = 0 : tabs--;
 		sprintf(temp, "%sTag: %X (%s)\n", emvPrint_tabs(tabs), t[i].tlv.Tag, t[i].Description == NULL ? "Unknown Tag" : t[i].Description);
 		strcat(output, temp);
 		sprintf(temp, "%sLength: %X (decimal: %d)\n", emvPrint_tabs(tabs + 1), t[i].tlv.Len, t[i].tlv.Len);
